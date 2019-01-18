@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Triain Schedule</title>
+
+    <!-- <link rel="stylesheet" href="assets/css/reset.css"> -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+        crossorigin="anonymous">
+    
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron border border-info mb-4 bg-dark text-white">
+            <div class="container">
+                <h1 class="display-4 text-center">Master Rail Schedule</h1>
+                <p class="lead text-center">A Comprehensive Directory of Trains' Comings and Goings</p>
+            </div>
+        </div>
+
+        <div class="border border-info bg-info text-white p-2 rounded-top">
+            <lable>Incoming Schedule</lable>
+        </div>
+        <div class="rounded-bottom border border-info mb-4 p-2 bg-dark text-white" id="info">
+            <table style="width:100%" id="table-of-items">
+                <tr class="border-bottom">
+                    <th>Train Name</th>
+                    <th>Destination</th>
+                    <th>Freuqency (in minutes)</th>
+                    <th>Next Arrival</th>
+                    <th>Minutes Away</th>
+                </tr>
+                <tr>
+                    <td>Excelsior</td>
+                    <td>HR</td>
+                    <td>01/10/2018</td>
+                    <td>12</td>
+                    <td>10000</td>
+                    
+                </tr>
+
+            </table>
+        </div>
+
+        <div class="border border-info bg-info text-white p-2 rounded-top">
+            <lable>Add Train</lable>
+        </div>
+        <form class="border border-info bg-dark p-2 rounded-bottom mb-4">
+
+            <div class="form-group">
+                <label class="text-white" for="name">Train Name</label>
+                <input type="text" class="form-control border border-info" id="train-name">
+            </div>
+
+            <div class="form-group">
+                <label class="text-white" for="role">Destination</label>
+                <input type="text" class="form-control border border-info" id="destination">
+            </div>
+
+            <div class="form-group">
+                <label class="text-white" for="date">First Train Time</label>
+                <input type="text" class="form-control border border-info" id="trainTime">
+            </div>
+
+            <div class="form-group">
+                <label class="text-white rounded" for="rate">Frequency( min)</label>
+                <input type="text" class="form-control border border-info" id="frequency">
+            </div>
+
+            <button type="submit" class="btn btn-info" id="go">Submit</button>
+        </form>
+
+
+
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+        <script src="https://www.gstatic.com/firebasejs/5.7.3/firebase.js"></script>
+        
+        <script>
+            // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyDZrxpkPipxS94GA7ZULbMdMRYg0hjFopA",
+                authDomain: "yessssssssssssss-695da.firebaseapp.com",
+                databaseURL: "https://yessssssssssssss-695da.firebaseio.com",
+                projectId: "yessssssssssssss-695da",
+                storageBucket: "yessssssssssssss-695da.appspot.com",
+                messagingSenderId: "892172232107"
+            };
+            firebase.initializeApp(config);
+            var database = firebase.database();
+            
+
+
+            // $("#add-employee-btn").on("click", function(event) {
+            //       event.preventDefault();
+                
+        
+      
+        // <!-- <script src ="\User Data\UCFVW201811FSF2\logic.js"> -->
+
+         
+        var database = firebase.database();
+        
+          $("#go").on("click", function(event) {
+            event.preventDefault();
+            
+            var trainName = $("#train-name").val().trim();
+          var destionationVar = $("#destination").val().trim();
+          var trainTimeVar = $("#trainTime").val().trim();
+          var frequencyVar = $("#frequency").val().trim();
+        
+        //   console.log(trainName);
+        //   console.log(destionationVar);
+        //   console.log(trainTimeVar);
+        //   console.log(frequencyVar);
+          
+          var trainSet = {
+            name: trainName,
+            destination: destionationVar,
+            arrival: trainTimeVar,
+            frequency: frequencyVar,
+          };
+        
+          database.ref().push(trainSet);
+// ----------------------------------------------------------------
+
+
+
+    
+    database.ref().limitToLast(1).on("child_added", function(childSnapshot) {
+
+      console.log(childSnapshot.val().name);
+      console.log(childSnapshot.val().destination);
+      console.log(childSnapshot.val().arrival);
+
+      $("#table-of-items").append("<tr><td>" +
+        childSnapshot.val().name +
+        " </td><td>" + childSnapshot.val().destination +
+        " </td><td> " + childSnapshot.val().frequency +
+        " </td><td> " + childSnapshot.val().arrival +
+        " </td></tr>");
+
+        //   database.ref().on("value",function(){
+            
+        //     database.ref().get(childSnapshot);
+    
+        //   });
+          
+          
+        })
+
+        })
+    </script>
+    </div>
+        
+    </div>
+</body>
+
+</html>
